@@ -1,8 +1,8 @@
 import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
 
 class DbHelper{
 
@@ -11,11 +11,12 @@ class DbHelper{
 
   /// Db Helper class ka 1 hi object bana ga jo hum puri app ma use kar skta han isko singleton khta han
 
-
   static DbHelper getInstance(){
     return DbHelper._();
   }
 
+  /// 2nd method without function to creating a instance
+  // static final DbHelper  getInstance  = DbHelper._();
 
   /// Create Table note
   final String TABLE_NOTE = "note";
@@ -23,14 +24,7 @@ class DbHelper{
   final String COLMN_NOTE_TITLE = "title";
   final String COLMN_NOTE_DESC = "desc";
 
-
-
-
-  /// 2nd method without function to creating a instance
-   // static final DbHelper  getInstance  = DbHelper._();
-
    // db open (path -> if exists than open else Create
-
 
    /// Now start work
     // create global variable
@@ -40,7 +34,6 @@ class DbHelper{
 
       myDb ??= await openDb();
       return myDb!;
-
        // if(myDb!=null){
        //   return myDb!;
        // }
@@ -49,7 +42,6 @@ class DbHelper{
        //  return myDb!;
        // }
      }
-
 
      Future<Database> openDb() async{
 
@@ -64,15 +56,18 @@ class DbHelper{
          db.execute("create table  $TABLE_NOTE "
              "( $COLMN_NOTE_SNO integer primary key autoincrement, $COLMN_NOTE_TITLE  text, $COLMN_NOTE_DESC text) ");
 
+
+
       } ,version: 1);
 
      }
 
 
 
-
      // All Queries
-      Future<bool>  addNote({required String title,required String desc})async {
+
+      // insert data
+      Future<bool> addNote({required String title,required String desc}) async {
 
         var db = await getDb();
 
@@ -83,8 +78,7 @@ class DbHelper{
        return rowsEffected>0;
       }
 
-
-      // Get Query
+      // Get Data
 
      Future<List<Map<String, dynamic>>>  getAllNotes() async{
 
@@ -93,6 +87,26 @@ class DbHelper{
          return mData;
 
       }
+
+      // update
+      Future<bool> updateNote({ required String title, required String description, required int sno}) async{
+
+         var db = await getDb();
+        int rowsEffected = await  db.update(TABLE_NOTE, {
+            COLMN_NOTE_TITLE: title,
+            COLMN_NOTE_DESC: description,
+          }, where: "$COLMN_NOTE_SNO = $sno");
+
+            return rowsEffected>0;
+      }
+
+      // delete
+
+         Future<bool> deleteNote({required int sno}) async{
+            var db = await getDb();
+          int rowsEffected = await  db.delete(TABLE_NOTE, where: "$COLMN_NOTE_SNO = $sno");
+           return rowsEffected>0;
+         }
 
 
 }
