@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
 
 class DbHelper{
 
@@ -11,9 +11,11 @@ class DbHelper{
 
   /// Db Helper class ka 1 hi object bana ga jo hum puri app ma use kar skta han isko singleton khta han
 
+
   static DbHelper getInstance(){
     return DbHelper._();
   }
+
 
   /// Create Table note
   final String TABLE_NOTE = "note";
@@ -46,10 +48,8 @@ class DbHelper{
        //  myDb = await openDb();
        //  return myDb!;
        // }
-
-
-
      }
+
 
      Future<Database> openDb() async{
 
@@ -64,11 +64,12 @@ class DbHelper{
          db.execute("create table  $TABLE_NOTE "
              "( $COLMN_NOTE_SNO integer primary key autoincrement, $COLMN_NOTE_TITLE  text, $COLMN_NOTE_DESC text) ");
 
-
-
       } ,version: 1);
 
      }
+
+
+
 
      // All Queries
       Future<bool>  addNote({required String title,required String desc})async {
@@ -81,6 +82,7 @@ class DbHelper{
         });
        return rowsEffected>0;
       }
+
 
       // Get Query
 
